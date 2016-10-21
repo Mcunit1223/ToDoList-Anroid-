@@ -28,9 +28,6 @@ public class ShowList extends AppCompatActivity {
 
     void loadList(){
         list.add("+ New Task");
-        for (int i = 0; i < 10; i++){
-            list.add("Do This #" + i);
-        }
     }
 
     @Override
@@ -96,6 +93,8 @@ public class ShowList extends AppCompatActivity {
                     ListLayout.addView(checkBox);
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                }else{
+                    ListLayout.removeView(v);
                 }
                 return false;
             }
