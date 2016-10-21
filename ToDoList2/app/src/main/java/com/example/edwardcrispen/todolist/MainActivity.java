@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     LinearLayout ListLayout;
     ArrayList<String> lists = new ArrayList<>();
+    protected static String currentList = "";
 
 
     void loadList(){
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void loadNextActivity(String name){
+        currentList = name;
         Intent intent = new Intent(this, ShowList.class);
         startActivity(intent);
     }
