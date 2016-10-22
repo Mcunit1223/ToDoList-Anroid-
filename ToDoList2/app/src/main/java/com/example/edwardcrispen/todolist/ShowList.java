@@ -64,12 +64,6 @@ public class ShowList extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle bundle){
-        String name = MainActivity.currentList;
-        bundle.putStringArrayList(name + "_contents", list);
-    }
-
     void newTask(){
         EditText editText = new EditText(getApplicationContext());
         editText.setText("Enter new Task");

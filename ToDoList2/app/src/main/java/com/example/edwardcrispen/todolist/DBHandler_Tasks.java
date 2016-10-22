@@ -1,20 +1,25 @@
 package com.example.edwardcrispen.todolist;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.*;
-import android.content.*;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class DBHandler extends SQLiteOpenHelper {
+/**
+ * Created by Edward Crispen on 10/22/2016.
+ */
+
+public class DBHandler_Tasks extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "List_database.db";
     public static final String TABLE_LISTS = "Lists";
     public static final String COLUMN_NAME = "name";
 
-    public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DBHandler_Tasks(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
@@ -22,7 +27,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE_LISTS + "( " +
                 COLUMN_NAME + " TEXT "  +
-                 ");";
+                ");";
         db.execSQL(query);
     }
 
@@ -43,7 +48,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void deleteList(String name){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_LISTS +
-        " WHERE " + "\"" + COLUMN_NAME + "=\"" + name + "\";");
+                " WHERE " + "\"" + COLUMN_NAME + "=\"" + name + "\";");
     }
 
     public ArrayList<List> toArrayList(){
