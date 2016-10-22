@@ -3,9 +3,11 @@ package com.example.edwardcrispen.todolist;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,51 +17,67 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    protected final static String FILENAME = "Lists_File";
+    protected final static String DEBUG_TAG = "DEBUG_D";
     LinearLayout ListLayout;
-    ArrayList<String> lists = new ArrayList<>();
+    ArrayList<Task> lists = new ArrayList<>();
     protected static String currentList = "";
-
-
-    void loadList(){
-        lists.add("+ New List");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ListLayout = (LinearLayout) findViewById(R.id.ScrollLayout);
+
         loadList();
-        for(final String listName : lists){
-            Button button = new Button(getApplicationContext());
-            button.setText(listName);
-            ListLayout.addView(button);
-            if(listName.equals("+ New List")){
-                button.setOnClickListener(new View.OnClickListener(){
+        for(final Task task : lists){
+            if(!task.isComplete()) {
+                Button button = new Button(getApplicationContext());
+                button.setText(task.getName());
+                ListLayout.addView(button);
+                if (task.getName().equals("+ New List")) {
+                    button.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        newList();
-                    }
-                });
-            }else{
-                button.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            newList();
+                        }
+                    });
+                } else {
+                    button.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View v) {
-                        loadNextActivity(listName);
-                    }
-                });
+                        @Override
+                        public void onClick(View v) {
+                            loadNextActivity(task.getName());
+                        }
+                    });
+                }
             }
         }
     }
 
+    private void loadList(){
+        DBHandler handler = new DBHandler(getApplicationContext(), null, null, 1);
+        lists = handler.toArrayList();
+        lists.add(0, new Task("+ New List", false));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
     void newList(){
         EditText editText = new EditText(getApplicationContext());
-        editText.setText("Enter new Task");
+        editText.setText("Enter new List");
         editText.setTextColor(Color.BLACK);
         editText.setBackgroundColor(Color.GRAY);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
@@ -74,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     ListLayout.addView(button);
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    lists.add(new Task(s, false));
                     button.setOnClickListener(new View.OnClickListener(){
 
                         @Override
